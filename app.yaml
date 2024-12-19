@@ -1,0 +1,12 @@
+runtime: python39  # Use Python 3.9 runtime
+
+entrypoint: gunicorn -b :$PORT main:app  # Start the Flask app using Gunicorn
+
+env_variables:
+    GOOGLE_APPLICATION_CREDENTIALS: "cosmic-ascent-444916-j4-88aa5b62a341.json"
+
+handlers:
+  - url: /.*
+    script: auto
+
+instance_class: F2  # Allocate more resources

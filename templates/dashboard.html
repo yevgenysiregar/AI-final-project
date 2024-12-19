@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        h1 { margin: 20px 0; }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .tab-button {
+            border: 1px solid #ccc;
+            padding: 10px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ddd;
+            color: gray;
+        }
+
+        .tab-button.active {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            font-weight: bold;
+        }
+
+        img {
+            width: 400px;
+            height: auto;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Electricity Prediction</h1>
+
+    <!-- Tabs for "Past" and "Prediction" -->
+    <div class="tab-buttons">
+        <div id="past-tab" class="tab-button active">Past</div>
+        <div id="prediction-tab" class="tab-button">Prediction</div>
+    </div>
+
+    <!-- Graph Display -->
+    <div class="content">
+        <img id="graph-image" src="" alt="Graph will appear here">
+    </div>
+
+    <script>
+        // Function to load "Past" graph
+        function loadPastGraph() {
+            $.ajax({
+                url: '/past_graph',
+                method: 'GET',
+                success: function(response) {
+                    $('#graph-image').attr('src', response.graph);
+                },
+                error: function() {
+                    alert("Failed to load past graph.");
+                }
+            });
+        }
+
+        // Function to load "Prediction" graph
+        function loadpredictionGraph() {
+            $.ajax({
+                url: '/future_graph',
+                method: 'POST',
+                success: function(response) {
+                    $('#graph-image').attr('src', response.graph);
+                },
+                error: function() {
+                    alert("Failed to load prediction graph.");
+                }
+            });
+        }
+
+        // Initial load
+        loadPastGraph();
+
+        // Tab click events
+        $('#past-tab').on('click', function() {
+            $(this).addClass('active');
+            $('#prediction-tab').removeClass('active');
+            loadPastGraph();
+        });
+
+        $('#prediction-tab').on('click', function() {
+            $(this).addClass('active');
+            $('#past-tab').removeClass('active');
+            loadpredictionGraph();
+        });
+    </script>
+</body>
+</html>
